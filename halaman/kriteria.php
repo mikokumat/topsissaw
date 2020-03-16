@@ -1,5 +1,6 @@
 <?php
 include '../formula.php';
+
 if (isset($_FILES["file"])) {
     $result = [];
     $fileName = $_FILES["file"]["tmp_name"];
@@ -17,8 +18,6 @@ if (isset($_FILES["file"])) {
             $x++;
         }
     }
-
-
     if (isset($manual)) {
         $alternatif_manual = array_shift($manual);
         foreach ($manual as $k => $v) {
@@ -28,6 +27,27 @@ if (isset($_FILES["file"])) {
         }
     }
     $result = json_encode($result);
+    $id = 1;
+    $pler = [];
+    foreach ($_POST['parent'] as $k => $v) {
+        $pler[$k]['parent_id'][] = null;
+        $pler[$k]['id'][] = $id;
+        $pler[$k]["nama"][] = $v['nama'];
+        $pler[$k]["atribut"][] = $v['sifat'];
+        $pler[$k]["bobot"][] = $v['bobot'];
+        if (isset($v['child']) ){
+            foreach ($v['child'] as $key => $val){
+                $pler[$k]['child']['parent_id'][] = $id;
+                $id++;
+                $pler[$k]['child']['id'][] = $id;
+                $pler[$k]['child']["nama"][] = $val['nama'];
+                $pler[$k]['child']["atribut"][] = $val['sifat'];
+                $pler[$k]['child']["bobot"][] = $val['bobot'];
+            }
+        }
+        $id++;
+    }
+    print_r(json_encode($pler));
 //    $topsis_pembagi = topsis_pembagi($manual, $kriteria);
 //    $topsis_nomalisasi = topsis_nomalisasi($manual, $topsis_pembagi);
 //    $topsis_terbobot = topsis_terbobot($topsis_nomalisasi);
@@ -36,8 +56,9 @@ if (isset($_FILES["file"])) {
 //    $topsis_v = topsis_v($topsis_d);
 //    $saw_normalisasi = saw_normalisasi($topsis_v);
 //    $saw_preferensi = saw_preferensi($saw_normalisasi, $kriteria);
+
 } else {
     $result = json_encode($_POST);
 }
 
-print_r($result);
+//print_r($result);

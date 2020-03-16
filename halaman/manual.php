@@ -87,9 +87,10 @@ tr:nth-child(even) {
 <script>
 
     let index = 0;
-    
+    let parent;
     function inputSubmit() {
         let res = $('#parent-content').serialize();
+        parent = $('#parent-content').serializeArray();
         $.ajax({
             type: "POST",
             url: "halaman/kriteria.php",
@@ -97,7 +98,7 @@ tr:nth-child(even) {
         })
         .done((data)=>{
             data = JSON.parse(data);
-            console.log(data);
+
             let no =1;
             $.each(data.parent,(k,v)=>{
                 let subno = 1;
@@ -147,31 +148,32 @@ tr:nth-child(even) {
     }
     $("#uploadimage").on('submit',(function(e) {
         e.preventDefault();
+        let form = new FormData(this);
+        $.each(parent,(k,v)=>{
+            form.append(v.name,v.value);
+        })
         $.ajax({
-            url: "halaman/kriteria.php", // Url to which the request is send
-            type: "POST",             // Type of request to be send, called as method
-            data: new FormData(this), // Data sent to server, a set of key/value pairs (i.e. form fields and values)
-            contentType: false,       // The content type used when sending data to the server.
-            cache: false,             // To unable request pages to be cached
-            processData:false,        // To send DOMDocument or non processed data file it is set to false
-            success: function(data)   // A function to be called if request succeeds
-        {
+            url: "halaman/kriteria.php",
+            type: "POST",
+            data: form,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+        })
+        .done((data)=>{
             data = JSON.parse(data);
             let no = 1;
             $.each(data,(k,v)=>{
                 let objhtml = `<tr><td>${no}</td><td>${k}</td>`;
                 $.each(v,(key,val) => {
                     objhtml = objhtml + `<td>${val}</td>`;
-                })
+                });
                 objhtml = objhtml + `</tr>`;
                 $('#hasil').append(objhtml);
                 no++;
             });
-        }
-    });
-}));
-    $(() => {
+        });
+    }));
 
-
-    })
+    $(() => {});
 </script>
