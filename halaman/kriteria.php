@@ -1,9 +1,14 @@
 <?php
+if (isset($_FILES["file"])) {
+    print_r($_FILES["file"]);
+} else {
+    $result = json_encode($_POST);
+}
 
-  // echo "<div style='overflow-x:auto;'>";  
+// echo "<div style='overflow-x:auto;'>";
   // echo "<table>\n\n";    
   // $fileName = $_FILES["file"]["tmp_name"];
-      print_r($_FILES["file"]);
+
 // if ($_FILES["file"]["size"] > 0) {
 //   $row = 1;
 //   $file = fopen($fileName, "r");      
@@ -35,7 +40,7 @@
     
 //     echo "\n</table></div>";
 
-$result = json_encode($_POST);	
+
 
 
 

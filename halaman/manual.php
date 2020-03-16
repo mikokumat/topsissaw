@@ -1,3 +1,4 @@
+<head>
 <style>
     
 table {
@@ -26,8 +27,8 @@ tr:nth-child(even) {
 }    
 
 </style>
-<head>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>  
+
+
 </head>
 <div id="content-manual">
     <label>
@@ -82,10 +83,7 @@ tr:nth-child(even) {
 </div>
 
 
-<script
-        src="//code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-        crossorigin="anonymous"></script>
+
 <script>
 
     let index = 0;
