@@ -156,7 +156,17 @@ tr:nth-child(even) {
             processData:false,        // To send DOMDocument or non processed data file it is set to false
             success: function(data)   // A function to be called if request succeeds
         {
-        console.log(data);
+            data = JSON.parse(data);
+            let no = 1;
+            $.each(data,(k,v)=>{
+                let objhtml = `<tr><td>${no}</td><td>${k}</td>`;
+                $.each(v,(key,val) => {
+                    objhtml = objhtml + `<td>${val}</td>`;
+                })
+                objhtml = objhtml + `</tr>`;
+                $('#hasil').append(objhtml);
+                no++;
+            });
         }
     });
 }));
@@ -165,73 +175,3 @@ tr:nth-child(even) {
 
     })
 </script>
-
-
-<?php  
-$kriteria = json_encode($_POST) ;
-$result = [];
-print_r($kriteria);
-
-
-
-if (isset($_POST["import"])) {
-  echo "<div style='overflow-x:auto;'>";  
-  echo "<table>\n\n";    
-  $fileName = $_FILES["file"]["tmp_name"];
-      
-if ($_FILES["file"]["size"] > 0) {
-  $row = 1;
-  $file = fopen($fileName, "r");      
-  $j=0;
-  $x=0;
-while (($column = fgetcsv($file, 10000, ";")) !== FALSE) {
-  $i=0;
-  $j=0;
-  echo "<tr>";                                   
-    foreach ($column as $cell) {
-      
-        $manual[$j++][$x] = $cell;
-      // $angka[$i] = (isset($angka[$i]) ? $angka[$i]+($cell*$cell) : ($cell*$cell));                           
-      echo "<td>" . htmlspecialchars($cell) . "</td>";
-      // $i++;                 
-    }
-$x++;                     
-echo "</tr>";                                          
-            if (! empty($result)) {
-              $type = "success";
-              $message = "CSV Data Imported into the Database";
-                } else {
-                  $type = "error";
-                    $message = "Problem in Importing CSV Data";
-                  }                                
-          }  
-                                          
-        }   
-    }
-    echo "\n</table></div>";
-
-if (isset($manual)) {
-    $alternatif_manual = array_shift($manual); 
-    print_r($alternatif_manual);
-    }
-
-if (isset($_POST['kriteria'])){
-include 'formula.php';
-    $topsis_pembagi = topsis_pembagi($manual,$kriteria);
-    $topsis_nomalisasi = topsis_nomalisasi($manual, $topsis_pembagi);
-    $topsis_terbobot = topsis_terbobot($topsis_nomalisasi);
-    $topsis_a = topsis_a($topsis_terbobot, $kriteria);
-    $topsis_d = topsis_d($topsis_a);
-    $topsis_v = topsis_v($topsis_d);
-    $saw_normalisasi = saw_normalisasi($topsis_v);
-    $saw_preferensi = saw_preferensi($saw_normalisasi,$kriteria);
-
-    
-}
-
-?>
-
-
-    
-
-    
