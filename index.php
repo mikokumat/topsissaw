@@ -1,3 +1,10 @@
+<?php 
+session_start();
+if ( !isset($_SESSION["login"])) {
+	header("Location: login.php");
+	exit;
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -55,7 +62,7 @@
 				break;
 		}
 	}else{
-		include "halaman/tutorial.php";
+		include "halaman/login.php";
 	}
  
 	 ?>
