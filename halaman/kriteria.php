@@ -18,47 +18,49 @@ if (isset($_FILES["file"])) {
             $x++;
         }
     }
+    $data = [];
     if (isset($manual)) {
         $alternatif_manual = array_shift($manual);
         foreach ($manual as $k => $v) {
             foreach ($v as $key => $value){
-                $result[$alternatif_manual[$key]][] = $value;
+                $data[$alternatif_manual[$key]][] = $value;
             }
         }
     }
-    $result = json_encode($result);
+    $result['data'] = json_encode($data);
     $id = 1;
-    $pler = [];
+    $parent = [];
     foreach ($_POST['parent'] as $k => $v) {
-        $pler[$k]['parent_id'][] = null;
-        $pler[$k]['id'][] = $id;
-        $pler[$k]["nama"][] = $v['nama'];
-        $pler[$k]["atribut"][] = $v['sifat'];
-        $pler[$k]["bobot"][] = $v['bobot'];
+        $parent_id = $id;
+        $parent[$k]['parent_id'][] = null;
+        $parent[$k]['id'][] = $id;
+        $parent[$k]["nama"][] = $v['nama'];
+        $parent[$k]["atribut"][] = $v['sifat'];
+        $parent[$k]["bobot"][] = $v['bobot'];
         if (isset($v['child']) ){
             foreach ($v['child'] as $key => $val){
-                $pler[$k]['child']['parent_id'][] = $id;
                 $id++;
-                $pler[$k]['child']['id'][] = $id;
-                $pler[$k]['child']["nama"][] = $val['nama'];
-                $pler[$k]['child']["atribut"][] = $val['sifat'];
-                $pler[$k]['child']["bobot"][] = $val['bobot'];
+                $parent[$k]['child']['parent_id'][] = $parent_id;
+                $parent[$k]['child']['id'][] = $id;
+                $parent[$k]['child']["nama"][] = $val['nama'];
+                $parent[$k]['child']["atribut"][] = $val['sifat'];
+                $parent[$k]['child']["bobot"][] = $val['bobot'];
             }
         }
         $id++;
     }
-    print_r(json_encode($pler));
-//    $topsis_pembagi = topsis_pembagi($manual, $kriteria);
-//    $topsis_nomalisasi = topsis_nomalisasi($manual, $topsis_pembagi);
-//    $topsis_terbobot = topsis_terbobot($topsis_nomalisasi);
-//    $topsis_a = topsis_a($topsis_terbobot, $kriteria);
-//    $topsis_d = topsis_d($topsis_a);
-//    $topsis_v = topsis_v($topsis_d);
-//    $saw_normalisasi = saw_normalisasi($topsis_v);
-//    $saw_preferensi = saw_preferensi($saw_normalisasi, $kriteria);
-
+    $result['parent'] = $parent;
+    $topsis_pembagi = topsis_pembagi($manual, $parent);
+    $topsis_nomalisasi = topsis_nomalisasi($manual, $topsis_pembagi);
+    $topsis_terbobot = topsis_terbobot($topsis_nomalisasi);
+    $topsis_a = topsis_a($topsis_terbobot, $parent);
+    $topsis_d = topsis_d($topsis_a);
+    $topsis_v = topsis_v($topsis_d);
+    $saw_normalisasi = saw_normalisasi($topsis_v);
+    $saw_preferensi = saw_preferensi($saw_normalisasi, $parent);
+    $result = json_encode($result);
 } else {
     $result = json_encode($_POST);
 }
 
-//print_r($result);
+print_r($result);

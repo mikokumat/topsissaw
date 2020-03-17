@@ -161,7 +161,7 @@ tr:nth-child(even) {
             dataType: "json",
         })
         .done((data)=>{
-            data = JSON.parse(data);
+            data = JSON.parse(data.data);
             let no = 1;
             $.each(data,(k,v)=>{
                 let objhtml = `<tr><td>${no}</td><td>${k}</td>`;
