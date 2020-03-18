@@ -32,19 +32,23 @@ if (isset($_FILES["file"])) {
     $parent = [];
     foreach ($_POST['parent'] as $k => $v) {
         $parent_id = $id;
-        $parent[$k]['parent_id'][] = null;
-        $parent[$k]['id'][] = $id;
-        $parent[$k]["nama"][] = $v['nama'];
-        $parent[$k]["atribut"][] = $v['sifat'];
-        $parent[$k]["bobot"][] = $v['bobot'];
+        $parent[$k] =[
+            'id'=>$id,
+            'parent_id'=>null,
+            'nama'=>$v['nama'],
+            'atribut' => $v['sifat'],
+            'bobot'=>$v['bobot']
+        ];
         if (isset($v['child']) ){
             foreach ($v['child'] as $key => $val){
                 $id++;
-                $parent[$k]['child']['parent_id'][] = $parent_id;
-                $parent[$k]['child']['id'][] = $id;
-                $parent[$k]['child']["nama"][] = $val['nama'];
-                $parent[$k]['child']["atribut"][] = $val['sifat'];
-                $parent[$k]['child']["bobot"][] = $val['bobot'];
+                $parent[$k]['child'][$key] = [
+                    'id'=>$id,
+                    'parent_id'=>$parent_id,
+                    'nama'=>$v['nama'],
+                    'bobot'=>$val['bobot'],
+                    'atribut' => $val['sifat']
+                ];
             }
         }
         $id++;
@@ -58,7 +62,7 @@ if (isset($_FILES["file"])) {
     $topsis_v = topsis_v($topsis_d);
     $saw_normalisasi = saw_normalisasi($topsis_v);
     $saw_preferensi = saw_preferensi($saw_normalisasi, $parent);
-    $result = json_encode($result);
+    $result = json_encode($parent);
 } else {
     $result = json_encode($_POST);
 }
