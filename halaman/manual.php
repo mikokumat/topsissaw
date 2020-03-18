@@ -79,13 +79,83 @@ tr:nth-child(even) {
     </thead>
         <tbody id="hasil"></tbody>
     </table>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2>Preference Value</h2>
+            </div>
+            <div class="col-6">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>RT/RW</th>
+                            <th>PREFERENSI SAW</th>
+                        </tr>
+                    </thead>
+                    <tbody id="preference_v"></tbody>
+                </table>
+            </div>
+            <div class="col-6">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>RT/RW</th>
+                        <th>PREFERENSI SAW MAX</th>
+                    </tr>
+                    </thead>
+                    <tbody id="preference_v_max"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <canvas id="myChart" width="600" height="200"></canvas>
+    <div id="topsis_v">
 </div>
 </div>
 
 
-
+<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
 <script>
-
+    function  renderChart(id,data,title){
+        let color = [];
+        let label=[];
+        let dataSet = [];
+        $.each(data, (k,v)=>{
+            label.push(labelname[k]);
+            dataSet.push(v);
+            color.push(random_rgba());
+        });
+        var ctx = document.getElementById(id).getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: label ,
+                datasets: [{
+                    data: dataSet,
+                    backgroundColor: color,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: title ,
+                    position: 'top',
+                    fontSize: 16,
+                    padding: 20
+                },
+            }
+        });
+    }
+    function random_rgba() {
+        var o = Math.round, r = Math.random, s = 255;
+        return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + r().toFixed(1) + ')';
+    }
+    let labelname=[];
     let index = 0;
     let parent;
     function inputSubmit() {
@@ -161,9 +231,12 @@ tr:nth-child(even) {
             dataType: "json",
         })
         .done((data)=>{
-            data = JSON.parse(data.data);
+            dataH = JSON.parse(data.data);
             let no = 1;
-            $.each(data,(k,v)=>{
+            let saw_preferensi=[];
+            $.each(dataH,(k,v)=>{
+                saw_preferensi.push({key:k});
+                labelname.push(k);
                 let objhtml = `<tr><td>${no}</td><td>${k}</td>`;
                 $.each(v,(key,val) => {
                     objhtml = objhtml + `<td>${val}</td>`;
@@ -172,6 +245,26 @@ tr:nth-child(even) {
                 $('#hasil').append(objhtml);
                 no++;
             });
+
+            $.each(data.saw_preferensi.saw_preferensi,(k,v)=>{
+                saw_preferensi[k]['value'] = v
+            });
+            saw_preferensi = saw_preferensi.sort((a,b)=>b.value - a.value);
+            let vsaw_preferensi=[];
+            $.each(saw_preferensi,(k,v)=>{
+                if (v.value) {
+                    $('#preference_v').append(`<tr><td>${v.key}</td><td>${v.value}</td></tr>`)
+                    vsaw_preferensi.push(v.value)
+                }
+            });
+            $('#preference_v_max').append(`<tr><td>${saw_preferensi[0].key}</td><td>${saw_preferensi[0].value}</td></tr>`);
+            renderChart('myChart',vsaw_preferensi,'TOTAL PREFERENSI TINGKAT KEKUMUHAN KAWASAN');
+            let i =0;
+            $.each(data.topsis_v,(k,v)=>{
+                $('#topsis_v').append(`<canvas id="myChart${k}" width="600" height="200"></canvas>`);
+                renderChart(`myChart${k}`,v['V'+k],data.parent[i]['nama']);
+                i++;
+            })
         });
     }));
 

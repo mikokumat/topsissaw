@@ -54,15 +54,15 @@ if (isset($_FILES["file"])) {
         $id++;
     }
     $result['parent'] = $parent;
-    $topsis_pembagi = topsis_pembagi($manual, $parent);
-    $topsis_nomalisasi = topsis_nomalisasi($manual, $topsis_pembagi);
-    $topsis_terbobot = topsis_terbobot($topsis_nomalisasi);
-    $topsis_a = topsis_a($topsis_terbobot, $parent);
-    $topsis_d = topsis_d($topsis_a);
-    $topsis_v = topsis_v($topsis_d);
-    $saw_normalisasi = saw_normalisasi($topsis_v);
-    $saw_preferensi = saw_preferensi($saw_normalisasi, $parent);
-    $result = json_encode($parent);
+    $result['topsis_pembagi']=$topsis_pembagi = topsis_pembagi($manual, $parent);
+    $result['topsis_nomalisasi']=$topsis_nomalisasi = topsis_nomalisasi($manual, $topsis_pembagi);
+    $result['topsis_terbobot']=$topsis_terbobot = topsis_terbobot($topsis_nomalisasi);
+    $result['topsis_a']=$topsis_a = topsis_a($topsis_terbobot, $parent);
+    $result['topsis_d']=$topsis_d = topsis_d($topsis_a);
+    $result['topsis_v']=$topsis_v = topsis_v($topsis_d);
+    $result['saw_normalisasi']=$saw_normalisasi = saw_normalisasi($topsis_v);
+    $result['saw_preferensi']=$saw_preferensi = saw_preferensi($saw_normalisasi, $parent);
+    $result = json_encode($result);
 } else {
     $result = json_encode($_POST);
 }
