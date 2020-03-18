@@ -1,10 +1,3 @@
-<?php 
-session_start();
-if ( !isset($_SESSION["login"])) {
-	header("Location: login.php");
-	exit;
-}
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,8 +25,12 @@ if ( !isset($_SESSION["login"])) {
 		      				
 				<li class="nav-item"><a class="nav-link" href="index.php?page=manual">DSS SYSTEM MANUAL</a></li>
 				
-				<li class="nav-item"><a class="nav-link" href="index.php?page=admin">ADMIN</a></li>	
+				
 		    </ul>
+		    <ul class="nav navbar-right">
+       			<li><a class="nav-link" href="index.php?page=login"><span class="glyphicon glyphicon-log-in"></span> ADMIN</a></li>
+    		</ul>
+		   
 
 		    	
 	</nav>
@@ -51,18 +48,15 @@ if ( !isset($_SESSION["login"])) {
 			case 'manual':
 				include "halaman/manual.php";
 				break;
-			case 'registrasi':
-				include "halaman/registrasi.php";
-				break;
-			case 'admin':
-				include "halaman/admin.php";
+			case 'login':
+				include "login.php";
 				break;						
 			default:
 				echo "<center><h3>Maaf. Halaman tidak di temukan !</h3></center>";
 				break;
 		}
 	}else{
-		include "halaman/login.php";
+		include "halaman/tutorial.php";
 	}
  
 	 ?>

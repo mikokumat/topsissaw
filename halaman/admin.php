@@ -1,3 +1,10 @@
+<?php 
+session_start();
+if ( !isset($_SESSION["login"])) {
+  header("Location: login.php");
+  exit;
+}
+?>
 <?php
 
 $conn = mysqli_connect("localhost","root","","romi");
@@ -12,6 +19,14 @@ $results = mysqli_query($conn, "SELECT * FROM kriteria WHERE parent_id IS NOT NU
 
 <body>
 
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">   
+        
+        <a class="navbar-brand" href="index.php?page=tutorial">DSS SLUM</a>          
+        <ul class="navbar-nav">                  
+          <li class="nav-item"><a class="nav-link" href="index.php?page=manual">DSS SYSTEM MANUAL</a></li>        
+          <li class="nav-item"><a class="nav-link" href="index.php?page=admin">ADMIN</a></li> 
+        </ul>          
+  </nav>
 
 
 

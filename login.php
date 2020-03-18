@@ -9,7 +9,7 @@ if (isset($_POST['login'])) {
 		$row = mysqli_fetch_assoc($result);
 		if (password_verify($password, $row["password"])) {
 			$_SESSION["login"] = true;
-		 	header("Location: index.php");
+		 	header("Location: admin.php");
 		 	exit;
 		 } 
 	}
@@ -32,6 +32,15 @@ if (isset($_POST['login'])) {
 <?php endif; ?>
 	<form method="POST" action="">
 		<ul>
+
+			<div class="form-group">
+		      <label class="col-sm-1 control-label">Username</label>
+		      <div class="col-sm-2">
+		        <input class="form-control" id="focusedInput" type="text" value="Click to focus...">
+		      </div>
+		    </div>
+
+
 			<li>
 				<label for="username">Username :</label>
 				<input type="text" name="username" id="username">
