@@ -206,10 +206,14 @@ function  renderChart(id,data,title){
     let color = [];
     let label=[];
     let dataSet = [];
-    $.each(data, (k,v)=>{
-      label.push(labelname[k]);
-      dataSet.push(v);
-      color.push(random_rgba());      
+    $.each(data, (k, v) => {
+        // label.push(labelname[k]);
+        dataSet.push(v);
+        color.push(random_rgba());
+    });
+    dataSet = dataSet.sort((a, b) => b - a).map((value, index) => {
+        label[index] = labelname[Object.keys(data).find(key => data[key] === value)];
+        return value
     });
     var ctx = document.getElementById(id).getContext('2d');
     var myChart = new Chart(ctx, {
